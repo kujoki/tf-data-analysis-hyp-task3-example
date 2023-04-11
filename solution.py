@@ -1,13 +1,15 @@
 import pandas as pd
 import numpy as np
-
-from scipy.stats import ttest_1samp
+from scipy.stats import norm
 
 chat_id = 670223087 # Ваш chat ID, не меняйте название переменной
 
-def solution(x) -> bool:
-    alpha = 0.06 # уровень значимости критерия
-    threshold = 300 # пороговое значение затрат
-    t_statistic, p_value = ttest_1samp(x, threshold)
-    reject_null = p_value/2 < alpha and t_statistic < 0
-    return reject_null[0]
+def solution(x):
+    alpha=0.06
+    n = len(x)
+    mu = 300
+    sigma = np.std(x, ddof=1)
+    se = sigma / np.sqrt(n)
+    z = (np.mean(x) - mu) / se
+    p_value = norm.cdf(z)
+    return p_value < alpha
